@@ -1,7 +1,11 @@
-calculateProportion <- function(groupCount, otherGroupCount) {
-  totalCount <- groupCount + otherGroupCount
+calculateProportion <- function(groupCount, totalCount) {
   proportion <- groupCount / totalCount
-  print(proportion)
+  roundedProportion <- round(proportion, 3)
+  print(roundedProportion)
 }
 
-myProportion(155, 172)
+toDecimal <- function(num){
+   num / 100
+}
+
+myProportion(0.916, toDecimal(12.4))
