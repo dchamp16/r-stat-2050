@@ -26,6 +26,8 @@ mean_N3Q18B <-mean(ncha$N3Q18B, na.rm = TRUE)
 sd_N3Q18B <- sd(ncha$N3Q18B, na.rm = TRUE)
 
 
+# answer:
+
 # Print the results for N3Q18B
 print(paste("Mean of N3Q18B:", mean_N3Q18B))
 print(paste("Standard Deviation of N3Q18B:", sd_N3Q18B))
