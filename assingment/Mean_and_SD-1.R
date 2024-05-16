@@ -8,8 +8,8 @@ library(readxl)
 
 
 #### You will need to change this value for your own computer
-dataDir = "/Users/dcham/Documents/Github/r-stat-2050/datas" # PC
-# dataDir = "/Users/dcham/Documents/Github/r-stat-2050/datas" # MAC
+current_dir <- dirname(normalizePath("."))
+dataDir <- file.path(current_dir, "Github", "r-stat-2050", "datas")
 
 
 ### Read in the Dataset

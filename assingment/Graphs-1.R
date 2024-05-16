@@ -8,7 +8,8 @@ library(readxl)
 
 
 #### You will need to change this value for your own computer
-dataDir = "/Users/dcham/Documents/Github/r-stat-2050/datas"
+current_dir <- dirname(normalizePath("."))
+dataDir <- file.path(current_dir, "Github", "r-stat-2050", "datas")
 
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
