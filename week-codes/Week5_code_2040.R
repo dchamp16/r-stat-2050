@@ -5,7 +5,17 @@ bb_money = read.csv("https://www.lock5stat.com/datasets3e/BaseballSalaries2019.c
 
 ### Random data
 set.seed(2040)
-bb_sample = sample(bb_money$Salary, 10)
+bb_sample = sample(bb_money$Salary, 500)
+
+head(bb_money)
+
+print(length(bb_money$Name))
+
+mean(bb_sample)
+
+hist(bb_sample)
+
+mean(bb_money$Salary)
 
 ## Generate many samples of 10 and take the mean
 nSamps = 100000
