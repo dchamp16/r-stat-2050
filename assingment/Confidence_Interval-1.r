@@ -13,7 +13,7 @@ dataDir <- file.path(current_dir, "Github", "r-stat-2050", "datas")
 
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
-                        "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
+                        "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY - TIMESTAMP.xlsx", 
                         sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
 
 ncha = as.data.frame(ncha)
