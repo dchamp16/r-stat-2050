@@ -1,7 +1,9 @@
+# Load necessary libraries
 library(httr)
 library(jsonlite)
 library(dplyr)
 library(ggplot2)
+library(leaflet)
 
 # Define the endpoint and parameters for the USGS Earthquake API
 endpoint <- "https://earthquake.usgs.gov/fdsnws/event/1/query"
@@ -13,22 +15,21 @@ params <- list(
   maxlatitude = 42.001567,
   minlongitude = -114.052973,
   maxlongitude = -109.041058,
-  limit = 20000  # Adjust limit if needed based on API guidelines
+  limit = 20000
 )
 
 # Make the GET request to the API
 response <- GET(endpoint, query = params)
 
-# Check if the request was successful
+# Handle the API response
 if (response$status_code == 200) {
-  data <- content(response, as = "parsed", type = "application/json")
+  data <- content(response, "parsed", type = "application/json")
   
-  # Check if data has features
   if (length(data$features) == 0) {
-    stop("No data returned. Check if the parameters are correct or adjust the time range.")
+    stop("No data returned. Adjust the time range or check the parameters.")
   }
   
-  # Attempt to convert the features into a dataframe
+  # Convert the features into a dataframe
   df <- tryCatch({
     do.call(rbind, lapply(data$features, function(x) {
       data.frame(
@@ -36,44 +37,34 @@ if (response$status_code == 200) {
         magnitude = if (!is.null(x$properties$mag)) as.numeric(x$properties$mag) else NA,
         place = if (!is.null(x$properties$place)) as.character(x$properties$place) else NA,
         latitude = if (!is.null(x$geometry$coordinates[2])) as.numeric(x$geometry$coordinates[2]) else NA,
-        longitude = if (!is.null(x$geometry$coordinates[1])) as.numeric(x$geometry$coordinates[1]) else NA,
-        stringsAsFactors = FALSE
+        longitude = if (!is.null(x$geometry$coordinates[1])) as.numeric(x$geometry$coordinates[1]) else NA
       )
     }))
   }, error = function(e) {
-    cat("Error in converting features to dataframe: ", e$message, "\n")
-    NULL  # Returning NULL if an error occurs
+    cat("Error in data conversion: ", e$message, "\n")
+    NULL  # Return NULL if an error occurs
   })
   
-  # Check if dataframe is created successfully
   if (is.null(df)) {
     stop("Failed to convert data to dataframe.")
   }
   
-  # Display the structure and summary of the dataframe
-  print(str(df))
-  print(summary(df))
+  # Filter out non-finite values in the magnitude column
+  df <- df %>% filter(is.finite(magnitude))
   
 } else {
-  stop(paste("Failed to fetch data from the USGS Earthquake API. Status code:", response$status_code))
+  stop(paste("Failed to fetch data: Status code", response$status_code))
 }
 
-# Save the dataframe for further analysis
-save(df, file = "earthquake_data_utah.RData")
-
-
-
-# Load necessary library
-library(ggplot2)
-
-# Plotting the distribution of earthquake magnitudes
-ggplot(df, aes(x = magnitude)) + 
+# Visualization and Summary Statistics
+# Histogram of earthquake magnitudes
+ggplot(df, aes(x = magnitude)) +
   geom_histogram(bins = 30, fill = "blue", color = "black") +
   labs(title = "Distribution of Earthquake Magnitudes in Utah", x = "Magnitude", y = "Count")
 
-# Time series plot of earthquakes over time (monthly counts)
-df$month <- as.Date(format(df$time, "%Y-%m-01"))  # Creating a new column 'month' for aggregation
-monthly_counts <- df %>% 
+# Time series plot of monthly earthquake counts
+df$month <- as.Date(format(df$time, "%Y-%m-01"))
+monthly_counts <- df %>%
   group_by(month) %>%
   summarise(count = n())
 
@@ -81,12 +72,34 @@ ggplot(monthly_counts, aes(x = month, y = count)) +
   geom_line(color = "red") +
   labs(title = "Monthly Earthquake Counts in Utah", x = "Month", y = "Number of Earthquakes")
 
-# Map of earthquake occurrences
-library(ggmap)
-utah_map <- get_map(location = c(lon = mean(c(-114.052973, -109.041058)), lat = mean(c(36.997966, 42.001567))), 
-                    zoom = 7, maptype = "terrain")
-ggmap(utah_map) +
-  geom_point(data = df, aes(x = longitude, y = latitude, color = magnitude), alpha = 0.5, size = 1) +
-  scale_color_gradient(low = "yellow", high = "red") +
-  labs(title = "Map of Earthquake Occurrences in Utah", x = "Longitude", y = "Latitude")
+# Assuming 'df' is your data frame with longitude, latitude, magnitude, and place information
+# Prepare the Leaflet map
+leaflet_map <- leaflet(df) %>%
+  addProviderTiles("OpenStreetMap") %>%  # Using OpenStreetMap tiles
+  addCircleMarkers(
+    ~longitude, 
+    ~latitude, 
+    radius = ~magnitude,  # Setting the radius proportional to the magnitude
+    popup = ~paste("Place:", place, "<br/>Magnitude:", magnitude),  # Popup text
+    color = ~ifelse(magnitude > 4, "red", "blue"),  # Color condition
+    fillOpacity = 0.8
+  ) %>%
+  addLegend(
+    "bottomright", 
+    pal = colorNumeric(palette = c("blue", "red"), domain = df$magnitude),  # Color palette
+    values = df$magnitude,
+    title = "Magnitude",
+    opacity = 0.7
+  )
 
+# Print the map to view in RStudio's Viewer pane
+print(leaflet_map)
+
+# Additionally, save the map as an HTML file to view in any web browser
+library(htmlwidgets)  # Load htmlwidgets to use saveWidget
+saveWidget(leaflet_map, "EarthquakeMap.html", selfcontained = TRUE)
+
+
+# Print the summary statistics
+summary_stats <- summary(df$magnitude)
+print(summary_stats)
