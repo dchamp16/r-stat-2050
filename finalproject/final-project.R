@@ -102,4 +102,6 @@ saveWidget(leaflet_map, "EarthquakeMap.html", selfcontained = TRUE)
 
 # Print the summary statistics
 summary_stats <- summary(df$magnitude)
+plot(summary_stats)
+table(summary_stats)
 print(summary_stats)
