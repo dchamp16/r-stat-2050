@@ -18,20 +18,15 @@ ncha = read_excel(paste(dataDir,
 
 ncha = as.data.frame(ncha)
 
-#### Goodness of fit test
-# H0: The proportions are as stated
-# Ha: At least one proportion is different
-chisq.test(table(ncha$N3Q5), correct = FALSE, 
-            p = c(.1, .2, .5, .2))
 
-# Conclusion: We fail to reject H0 and cannot conclude any of the proportions 
-#             is different than stated.
+goodness_of_fit_test <- chisq.test(table(ncha$N3Q12C), correct = FALSE, p = c(0.7, 0.15, 0.05, 0.1))
+
+print("Goodness of Fit Test for N3Q12C:")
+print(goodness_of_fit_test)
 
 
-#### Chi square test of independence
-# H0: The variables are not associated
-# Ha: The variables are associated
-chisq.test(table(ncha$N3Q12A, ncha$N3Q12B))
+association_test <- chisq.test(table(ncha$N3Q12C, ncha$N3Q12D))
 
-# Conclusion: We reject H0 and conclude that there is an association between the variables.
+print("Test of Association between N3Q12C and N3Q12D:")
+print(association_test)
 
