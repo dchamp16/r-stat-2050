@@ -103,3 +103,29 @@ saveWidget(leaflet_map, "EarthquakeMap.html", selfcontained = TRUE)
 # Print the summary statistics
 summary_stats <- summary(df$magnitude)
 print(summary_stats)
+
+
+# Assuming df is your data frame and magnitude is the column of interest
+
+# Calculate the total number of earthquakes
+total_earthquakes <- nrow(df)
+
+# Calculate the number of earthquakes with magnitude > 5
+large_earthquakes <- sum(df$magnitude > 5, na.rm = TRUE)
+
+# Estimate the probability
+probability_large_earthquake <- large_earthquakes / total_earthquakes
+
+# Print the probability
+print(paste("Probability of an earthquake greater than magnitude 5:", probability_large_earthquake))
+
+# Calculate the return period in years, assuming the data covers a specific period, e.g., 23 years from 2000-2023
+return_period_years <- 1 / probability_large_earthquake
+
+# Assuming your data represents earthquake events from 2000-2023 (23 years)
+annual_probability = probability_large_earthquake * (total_earthquakes / 23)
+
+# Print the return period
+print(paste("Expected return period for an earthquake greater than magnitude 5:", return_period_years, "earthquakes"))
+print(paste("Annual probability of an earthquake greater than magnitude 5:", annual_probability))
+
