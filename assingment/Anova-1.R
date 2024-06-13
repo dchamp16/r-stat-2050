@@ -8,24 +8,34 @@ library(readxl)
 
 
 #### You will need to change this value for your own computer
-dataDir = "/Users/10975067/Documents/John/UVU/Classes/STAT 2040/2040 Ritems/ncha/Files"
+current_dir <- dirname(normalizePath("."))
+dataDir <- file.path(current_dir, "r-stat-2050", "datas")
 
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
-                "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
-                sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
+                        "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
+                        sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
 
 ncha = as.data.frame(ncha)
 
-#### ANOVA
-myANOVA = aov(BMI ~ N3Q1, data = ncha)
-summary(myANOVA)
 
-plot(myANOVA)
-# Conclusion: We reject H0 and conclude that the mean BMI is different for
-#             at least one of the groups (overall health levels)
-# Assumptions: maybe some non-constant variance (first bar of points is a little shorter)
-#               but it looks to be within acceptable ranges. Some small deviation from
-#               normality, but probably ok as well. 
+myANOVA_exercise = aov(N3Q6 ~ N3Q4, data = ncha)
+summary(myANOVA_exercise)
+
+# Plot diagnostic plots to check assumptions
+par(mfrow = c(2, 2)) # Arrange plots in a 2x2 grid
+plot(myANOVA_exercise)
 
 
+
+# anova result
+# f value: 1.091
+# p value: 0.36
+# conclusion: pvalue is greater than 0.05. fail to reject the null hypothesis. no big difference in mean on moderate exercise among the different weight classes (
+  
+# assumption
+# q-q plot has a deviation from normality going up trend, residual and leverage plot indicated has influential points upward trend and residual and fitted looking like a downward trend
+  
+# conclusion:
+# according to anova it fail to reject the null hypothesis, no significant diferenc in groups. anova is robust for assumptions, it provided a good result even though it is an assumption, but there is another approach to validate and ensure more reliable judgment
+  
