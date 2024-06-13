@@ -1,9 +1,10 @@
-# Load necessary libraries
 library(httr)
 library(jsonlite)
 library(dplyr)
 library(ggplot2)
 library(leaflet)
+# Additionally, save the map as an HTML file to view in any web browser
+library(htmlwidgets)  # Load htmlwidgets to use saveWidget
 
 # Define the endpoint and parameters for the USGS Earthquake API
 endpoint <- "https://earthquake.usgs.gov/fdsnws/event/1/query"
@@ -95,13 +96,14 @@ leaflet_map <- leaflet(df) %>%
 # Print the map to view in RStudio's Viewer pane
 print(leaflet_map)
 
-# Additionally, save the map as an HTML file to view in any web browser
-library(htmlwidgets)  # Load htmlwidgets to use saveWidget
+
 saveWidget(leaflet_map, "EarthquakeMap.html", selfcontained = TRUE)
 
 
 # Print the summary statistics
 summary_stats <- summary(df$magnitude)
+plot(summary_stats)
+table(summary_stats)
 print(summary_stats)
 
 
