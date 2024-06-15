@@ -9,14 +9,17 @@ library(readxl)
 
 #### You will need to change this value for your own computer
 current_dir <- dirname(normalizePath("."))
-dataDir <- file.path(current_dir, "r-stat-2050", "datas")
-
+dataDir <- file.path(current_dir, "GitHub","r-stat-2050", "datas")
+print(dataDir)
+print(current_dir)
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
                         "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
                         sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
 
 ncha = as.data.frame(ncha)
+
+
 
 
 myANOVA_exercise = aov(N3Q6 ~ N3Q4, data = ncha)
