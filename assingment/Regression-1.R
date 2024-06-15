@@ -8,12 +8,12 @@ library(readxl)
 
 
 #### You will need to change this value for your own computer
-dataDir = "/Users/10975067/Documents/John/UVU/Classes/STAT 2040/2040 Ritems/ncha/Files"
-
+current_dir <- dirname(normalizePath("."))
+dataDir <- file.path(current_dir, "GitHub","r-stat-2050", "datas")
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
-                "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
-                sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
+                        "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
+                        sep = "/"), sheet = "NCHA-III WEB SPRING 2021 UTAH V")
 
 ncha = as.data.frame(ncha)
 
