@@ -9,7 +9,7 @@ library(readxl)
 
 #### You will need to change this value for your own computer
 current_dir <- dirname(normalizePath("."))
-dataDir <- file.path(current_dir, "GitHub","r-stat-2050", "datas")
+dataDir <- file.path(current_dir,"r-stat-2050", "datas")
 ### Read in the Dataset
 ncha = read_excel(paste(dataDir, 
                         "NCHA-III WEB SPRING 2021 UTAH VALLEY UNIVERSITY  - TIMESTAMP.xlsx", 
@@ -31,7 +31,6 @@ p_value <- summary(myReg)$coefficients[2,4]
 
 print(paste("t-statistic:", t_statistic))
 print(paste("p-value:", p_value))
-ss
 # ssince the pvalue 0.05, 0.217 to be exact. we dont reject the null hypothesis does not have a big impact on this group when drinking sugary drink and doing intense workout. statistically it says that the relationship between drinking sugary drink and exercising is not significant. so encouraging doing more minutes of workout will not do better redusing sugary consumption. there are more better option trying to lower the sugar drink intake.
 
 
