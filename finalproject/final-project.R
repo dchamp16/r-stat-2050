@@ -5,8 +5,8 @@ new_packages <- packages[!(packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)) install.packages(new_packages)
 
 # Load the libraries
-library(httr)
 library(jsonlite)
+library(httr)
 library(dplyr)
 library(ggplot2)
 library(fitdistrplus)
